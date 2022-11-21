@@ -10,15 +10,13 @@ class SonAccount {
 
     // Deposita quantità
     deposit(num: number): number {
-        let afterInterests: number = num - this.interest(num, 10);
-        this.balanceInit = this.balanceInit + afterInterests;
-        return afterInterests;
+        this.balanceInit = this.balanceInit + num;
+        return num;
     }
     // Deposita 100
     depositFixed(): number {
-        let afterInterests: number = 100 - this.interest(100, 10);
-        this.balanceInit = this.balanceInit + afterInterests;
-        return afterInterests;
+        this.deposit(100);
+        return 100;
     }
 
     // Ritira quantità
@@ -28,13 +26,8 @@ class SonAccount {
     }
     // Ritira 100
     withdrawFixed(): number {
-        this.balanceInit = this.balanceInit - 100;
+        this.withdraw(100);
         return 100;
-    }
-
-    // Interesse del 10% di number
-    interest(number: number, percentage: number): number {
-        return (percentage / 100) * number;
     }
 }
 
@@ -63,21 +56,28 @@ console.log("---------------------------");
 //////////////////////////////////////////////////
 
 // MOTHER ACCOUNT
-
 class MotherAccount extends SonAccount {
     constructor(_balanceInit: number) {
         super(_balanceInit);
     }
 
-    // Deposita quantità
-    override deposit(num: number): number {
-        this.balanceInit = this.balanceInit + num;
-        return num;
+    // Deposita quantità    
+    deposit(num: number): number {
+        this.balanceInit = this.balanceInit + this.getInterest(num);
+        return this.getInterest(num);
     }
     // Deposita 100
-    override depositFixed(): number {
-        this.balanceInit = this.balanceInit + 100;
-        return 100;
+    depositFixed(): number {
+        this.deposit(100);
+        return this.getInterest(100);
+    }
+
+    // Interesse del 10% di number
+    interest(number: number): number {
+        return (10 / 100) * number;
+    }
+    getInterest(num: number): number {
+        return num - this.interest(num);
     }
 }
 

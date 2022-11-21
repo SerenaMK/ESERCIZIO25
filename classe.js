@@ -20,15 +20,13 @@ var SonAccount = /** @class */ (function () {
     }
     // Deposita quantità
     SonAccount.prototype.deposit = function (num) {
-        var afterInterests = num - this.interest(num, 10);
-        this.balanceInit = this.balanceInit + afterInterests;
-        return afterInterests;
+        this.balanceInit = this.balanceInit + num;
+        return num;
     };
     // Deposita 100
     SonAccount.prototype.depositFixed = function () {
-        var afterInterests = 100 - this.interest(100, 10);
-        this.balanceInit = this.balanceInit + afterInterests;
-        return afterInterests;
+        this.deposit(100);
+        return 100;
     };
     // Ritira quantità
     SonAccount.prototype.withdraw = function (num) {
@@ -37,12 +35,8 @@ var SonAccount = /** @class */ (function () {
     };
     // Ritira 100
     SonAccount.prototype.withdrawFixed = function () {
-        this.balanceInit = this.balanceInit - 100;
+        this.withdraw(100);
         return 100;
-    };
-    // Interesse del 10% di number
-    SonAccount.prototype.interest = function (number, percentage) {
-        return (percentage / 100) * number;
     };
     return SonAccount;
 }());
@@ -66,15 +60,22 @@ var MotherAccount = /** @class */ (function (_super) {
     function MotherAccount(_balanceInit) {
         return _super.call(this, _balanceInit) || this;
     }
-    // Deposita quantità
+    // Deposita quantità    
     MotherAccount.prototype.deposit = function (num) {
-        this.balanceInit = this.balanceInit + num;
-        return num;
+        this.balanceInit = this.balanceInit + this.getInterest(num);
+        return this.getInterest(num);
     };
     // Deposita 100
     MotherAccount.prototype.depositFixed = function () {
-        this.balanceInit = this.balanceInit + 100;
-        return 100;
+        this.deposit(100);
+        return this.getInterest(100);
+    };
+    // Interesse del 10% di number
+    MotherAccount.prototype.interest = function (number) {
+        return (10 / 100) * number;
+    };
+    MotherAccount.prototype.getInterest = function (num) {
+        return num - this.interest(num);
     };
     return MotherAccount;
 }(SonAccount));
